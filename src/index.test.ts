@@ -4,6 +4,7 @@ import {
   emptyFn,
   identity,
   pipe,
+  zip,
 } from './index';
 
 describe('IPojo', () => {
@@ -45,4 +46,43 @@ describe('pipe', () => {
     const xform = pipe(add3, times2, toString, repeat3);
     expect(xform(2)).toBe('101010');
   });
+});
+
+describe('zip', () => {
+  it('should zip two arrays', () => {
+    const foo = zip(
+      ['a', 'b'],
+      [1, 2],
+    );
+
+    expect(foo).toEqual([['a', 1], ['b', 2]]);
+  });
+
+  it('should truncate to the length of the shorter', () => {
+    const foo = zip(
+      ['a', 'b'],
+      [1, 2, 3],
+    );
+
+    expect(foo).toEqual([['a', 1], ['b', 2]]);
+  });
+
+  it('should take a type parameter for the first array', () => {
+    const foo = zip<string>(
+      ['a', 'b'],
+      ['c', 'd'],
+    );
+
+    expect(foo).toEqual([['a', 'c'], ['b', 'd']]);
+  });
+
+  it('should optionally take a type parameter for the second array', () => {
+    const foo = zip<string, number>(
+      ['a', 'b'],
+      [1, 2, 3],
+    );
+
+    expect(foo).toEqual([['a', 1], ['b', 2]]);
+  });
+
 });

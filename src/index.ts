@@ -10,6 +10,17 @@ export const emptyFn = (...args: any[]) => {};
 
 export const identity = <T>(x: T): T => x;
 
+export const zip = <T, U = T>(a: T[], b: U[]): [T, U][] => {
+  const result = [];
+  const l = Math.min(a.length, b.length);
+  for (let i = 0; i < l; ++i) {
+    const arr: [T, U] = [a[i], b[i]];
+    result.push(arr);
+  }
+
+  return result;
+};
+
 /**
  * Type-safe variadic pipe.
  *
