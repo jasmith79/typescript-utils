@@ -1,13 +1,42 @@
+/**
+ * index.ts
+ *
+ * @description My typescript utility interfaces and functions. Stuff that I
+ * need but that probably isn't worth importing e.g. Ramda for.
+ *
+ * @author jasmith79
+ * @license MIT
+ */
+
+/**
+ * @description Plain Old Javascript Object.
+ */
 export interface IPojo {
   [key: string]: any,
 }
 
+/**
+ * @description Object containing only JSON-compatible values, e.g. the result
+ * of JSON.parse.
+ */
 export interface IJSONObject {
   [key: string]: boolean | string | number | IJSONObject | IJSONObject[],
 }
 
-export const emptyFn = (...args: any[]) => {};
+/**
+ * @description A no-op. Swallows all arguments, returns void.
+ *
+ * @param _args {Array} Gathers all arguments.
+ * @returns {Void} Nothing.
+ */
+export const emptyFn = (..._args: any[]) => {};
 
+/**
+ * @description Identity function. Preserves type of the argument.
+ *
+ * @param x {T} The argument.
+ * @returns {T} The argument.
+ */
 export const identity = <T>(x: T): T => x;
 
 export const zip = <T, U = T>(a: T[], b: U[]): [T, U][] => {
@@ -45,6 +74,13 @@ type LastIndexOf<T extends any[]> =
   ((...x: T) => void) extends ((y: any, ...z: infer U) => void)
   ? U['length'] : never
 
+/**
+* @description Pipes a value through a list of functions.
+*
+* @param fs {Array} Gathers all passed in functions.
+* @returns {Function} A function that takes an argument and pipes
+* it through the provided functions.
+*/
 export const pipe = <F extends [(arg: any) => any, ...Array<(arg: any) => any>]>(
   ...fs: F & AsChain<F>
 ): (arg: ArgType<F[0]>) => ReturnType<F[LastIndexOf<F>]> => {
