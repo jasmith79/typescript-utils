@@ -62,3 +62,7 @@ typings/
 
 # compiled test files
 dist/*.test.*
+
+# housekeeping
+diff.txt
+commit-msg.txt
