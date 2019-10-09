@@ -1,7 +1,44 @@
 "use strict";
+/**
+ * index.ts
+ *
+ * @description My typescript utility interfaces and functions. Stuff that I
+ * need but that probably isn't worth importing e.g. Ramda for.
+ *
+ * @author jasmith79
+ * @license MIT
+ */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.emptyFn = (...args) => { };
+/**
+ * @description A no-op. Swallows all arguments, returns void.
+ *
+ * @param _args {Array} Gathers all arguments.
+ * @returns {Void} Nothing.
+ */
+exports.emptyFn = (..._args) => { };
+/**
+ * @description Identity function. Preserves type of the argument.
+ *
+ * @param x {T} The argument.
+ * @returns {T} The argument.
+ */
 exports.identity = (x) => x;
+exports.zip = (a, b) => {
+    const result = [];
+    const l = Math.min(a.length, b.length);
+    for (let i = 0; i < l; ++i) {
+        const arr = [a[i], b[i]];
+        result.push(arr);
+    }
+    return result;
+};
+/**
+* @description Pipes a value through a list of functions.
+*
+* @param fs {Array} Gathers all passed in functions.
+* @returns {Function} A function that takes an argument and pipes
+* it through the provided functions.
+*/
 exports.pipe = (...fs) => {
     return (arg) => {
         const [first, ...rest] = fs;
