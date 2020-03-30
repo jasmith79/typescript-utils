@@ -24,6 +24,24 @@ export interface IJSONObject {
 }
 
 /**
+ * @description A Basic reducer action.
+ */
+export interface IReducerAction<T> {
+  value: T,
+  type: string
+}
+
+/**
+ * @description Type of the reducer given to useReducer
+ */
+export type Reducer<S, A> = (prevState: S, action: A) => S
+
+/**
+ * @description Same as the type of the dispatch function returned from useReducer.
+ */
+export type Dispatch<A> = (action: A) => void
+
+/**
  * @description A no-op. Swallows all arguments, returns void.
  *
  * @param _args {Array} Gathers all arguments.
@@ -48,6 +66,23 @@ export const zip = <T, U = T>(a: T[], b: U[]): [T, U][] => {
   }
 
   return result;
+};
+
+/**
+ * @description bindP
+ * 
+ * Although due to their auto-flattening Promises do not strictly speaking
+ * comprise a monad, it's close enough for our purposes here. This function will
+ * serve the role of a monadic bind to facilitate composition of functions.
+ *
+ * @param fn The function to lift a function or method into the Promise not-quite-a-monad.
+ * @returns A Promise of the value returned from the passed-in function.
+ */
+export const bindP = <T, U>(fn: (x: T) => U | Promise<U>): ((y: Promise<T>) => Promise<U>) => {
+  return async function (this: any, p: Promise<T>) {
+    const value = await p;
+    return fn.call(this, value);
+  };
 };
 
 /**

@@ -5,6 +5,7 @@ import {
   identity,
   pipe,
   zip,
+  bindP,
 } from './index';
 
 describe('IPojo', () => {
@@ -85,4 +86,31 @@ describe('zip', () => {
     expect(foo).toEqual([['a', 1], ['b', 2]]);
   });
 
+});
+
+describe('bindP', () => {
+  it('should turn a normal function into a Promise-accepting one.', (done) => {
+    const add3 = (x: number) => x + 3;
+    bindP(add3)(Promise.resolve(2)).then(val => {
+      expect(val).toBe(5);
+      done();
+    });
+  });
+
+  it('should preserve ctx for methods', (done) => {
+    type Obj = {
+      a: number,
+      fn: (x: Promise<number>) => Promise<number>,
+    };
+
+    let obj: Obj = {
+      a: 1,
+      fn: bindP(function (this: Obj, b) { return this.a + b; })
+    };
+
+    obj.fn(Promise.resolve(2)).then(val => {
+      expect(val).toBe(3);
+      done();
+    });
+  });
 });

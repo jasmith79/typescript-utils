@@ -33,6 +33,22 @@ exports.zip = (a, b) => {
     return result;
 };
 /**
+ * @description bindP
+ *
+ * Although due to their auto-flattening Promises do not strictly speaking
+ * comprise a monad, it's close enough for our purposes here. This function will
+ * serve the role of a monadic bind to facilitate composition of functions.
+ *
+ * @param fn The function to lift a function or method into the Promise not-quite-a-monad.
+ * @returns A Promise of the value returned from the passed-in function.
+ */
+exports.bindP = (fn) => {
+    return async function (p) {
+        const value = await p;
+        return fn.call(this, value);
+    };
+};
+/**
 * @description Pipes a value through a list of functions.
 *
 * @param fs {Array} Gathers all passed in functions.
