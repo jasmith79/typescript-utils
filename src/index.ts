@@ -69,6 +69,14 @@ export const emptyFn = (..._args: any[]) => {};
  */
 export const identity = <T>(x: T): T => x;
 
+/**
+ * @description Identity function, does *not* preserve argument type.
+ *
+ * @param x The argument to return.
+ * @returns The supplied argument.
+ */
+export const echo = (x: any) => x;
+
 export const zip = <T, U = T>(a: T[], b: U[]): [T, U][] => {
   const result = [];
   const l = Math.min(a.length, b.length);
