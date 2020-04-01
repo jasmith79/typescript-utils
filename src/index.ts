@@ -42,6 +42,18 @@ export type Reducer<S, A> = (prevState: S, action: A) => S
 export type Dispatch<A> = (action: A) => void
 
 /**
+ * @description 
+ */
+export type HTMLFormControl = HTMLTextAreaElement
+  | HTMLInputElement
+  | HTMLSelectElement;
+
+export type FormControlEvent = {
+  target?: HTMLFormControl;
+  currentTarget?: HTMLFormControl;
+};
+
+/**
  * @description A no-op. Swallows all arguments, returns void.
  *
  * @param _args {Array} Gathers all arguments.
