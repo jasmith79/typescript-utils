@@ -23,6 +23,13 @@ exports.emptyFn = (..._args) => { };
  * @returns {T} The argument.
  */
 exports.identity = (x) => x;
+/**
+ * @description Identity function, does *not* preserve argument type.
+ *
+ * @param x The argument to return.
+ * @returns The supplied argument.
+ */
+exports.echo = (x) => x;
 exports.zip = (a, b) => {
     const result = [];
     const l = Math.min(a.length, b.length);

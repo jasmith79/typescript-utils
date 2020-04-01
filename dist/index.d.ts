@@ -36,6 +36,14 @@ export declare type Reducer<S, A> = (prevState: S, action: A) => S;
  */
 export declare type Dispatch<A> = (action: A) => void;
 /**
+ * @description
+ */
+export declare type HTMLFormControl = HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement;
+export declare type FormControlEvent = {
+    target?: HTMLFormControl;
+    currentTarget?: HTMLFormControl;
+};
+/**
  * @description A no-op. Swallows all arguments, returns void.
  *
  * @param _args {Array} Gathers all arguments.
@@ -49,6 +57,13 @@ export declare const emptyFn: (..._args: any[]) => void;
  * @returns {T} The argument.
  */
 export declare const identity: <T>(x: T) => T;
+/**
+ * @description Identity function, does *not* preserve argument type.
+ *
+ * @param x The argument to return.
+ * @returns The supplied argument.
+ */
+export declare const echo: (x: any) => any;
 export declare const zip: <T, U = T>(a: T[], b: U[]) => [T, U][];
 /**
  * @description bindP
