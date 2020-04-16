@@ -3,7 +3,7 @@
  * index.ts
  *
  * @description My typescript utility interfaces and functions. Stuff that I
- * need but that probably isn't worth importing e.g. Ramda for.
+ * need but that probably isn't worth importing e.g. Ramda, Lodash for.
  *
  * @author jasmith79
  * @license MIT
@@ -30,6 +30,44 @@ exports.identity = (x) => x;
  * @returns The supplied argument.
  */
 exports.echo = (x) => x;
+/**
+ * @description Will bin up calls to the debounced function.
+ *
+ * @param n The debounce timeout.
+ * @param immed Whether to fire the debounced function on first event.
+ * @param f The function to debounce.
+ * @returns The debounced function.
+ */
+const debounce = (n, immed, f) => {
+    let [func, now] = (() => {
+        switch (Object.prototype.toString.call(immed)) {
+            case '[object Boolean]':
+                return [f, immed];
+            case '[object Function]':
+                return [immed, false];
+            default:
+                throw new TypeError(`Unrecognized arguments ${immed} and ${f} to function deb.`);
+        }
+    })();
+    let fn = func;
+    let timer = -1;
+    return function (...args) {
+        if (timer === -1 && now) {
+            fn.apply(this, args);
+        }
+        clearTimeout(timer);
+        timer = setTimeout(() => fn.apply(this, args), n);
+        return timer;
+    };
+};
+/**
+ * @description Combines two arrays pairwise, truncating to the length of the
+ * shorter.
+ *
+ * @param a First array.
+ * @param b Second array.
+ * @returns An array with the matching index pairs from the input arrrays.
+ */
 exports.zip = (a, b) => {
     const result = [];
     const l = Math.min(a.length, b.length);

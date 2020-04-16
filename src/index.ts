@@ -2,7 +2,7 @@
  * index.ts
  *
  * @description My typescript utility interfaces and functions. Stuff that I
- * need but that probably isn't worth importing e.g. Ramda for.
+ * need but that probably isn't worth importing e.g. Ramda, Lodash for.
  *
  * @author jasmith79
  * @license MIT
@@ -77,6 +77,50 @@ export const identity = <T>(x: T): T => x;
  */
 export const echo = (x: any) => x;
 
+/**
+ * @description Will bin up calls to the debounced function.
+ *
+ * @param n The debounce timeout.
+ * @param immed Whether to fire the debounced function on first event.
+ * @param f The function to debounce.
+ * @returns The debounced function.
+ */
+const debounce = (
+  n: number,
+  immed: boolean | ((...args: any[]) => void),
+  f?: ((...args: any[]) => void),
+): ((...args: any[]) => number) => {
+  let [func, now] = (() => {
+    switch (Object.prototype.toString.call(immed)) {
+      case '[object Boolean]':
+        return [f as (...args: any[]) => void, immed as boolean];
+      case '[object Function]':
+        return [immed as (...args: any[]) => void, false];
+      default:
+        throw new TypeError(`Unrecognized arguments ${immed} and ${f} to function deb.`);
+    }
+  })();
+
+  let fn = (func as (...args: any[]) => void);
+  let timer: number = -1;
+  return function (this: any, ...args: any[]) {
+    if (timer === -1 && now) {
+      fn.apply(this, args);
+    }
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), n);
+    return timer;
+  }
+};
+
+/**
+ * @description Combines two arrays pairwise, truncating to the length of the
+ * shorter.
+ *
+ * @param a First array.
+ * @param b Second array.
+ * @returns An array with the matching index pairs from the input arrrays.
+ */
 export const zip = <T, U = T>(a: T[], b: U[]): [T, U][] => {
   const result = [];
   const l = Math.min(a.length, b.length);

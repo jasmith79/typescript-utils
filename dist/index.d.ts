@@ -2,7 +2,7 @@
  * index.ts
  *
  * @description My typescript utility interfaces and functions. Stuff that I
- * need but that probably isn't worth importing e.g. Ramda for.
+ * need but that probably isn't worth importing e.g. Ramda, Lodash for.
  *
  * @author jasmith79
  * @license MIT
@@ -64,6 +64,14 @@ export declare const identity: <T>(x: T) => T;
  * @returns The supplied argument.
  */
 export declare const echo: (x: any) => any;
+/**
+ * @description Combines two arrays pairwise, truncating to the length of the
+ * shorter.
+ *
+ * @param a First array.
+ * @param b Second array.
+ * @returns An array with the matching index pairs from the input arrrays.
+ */
 export declare const zip: <T, U = T>(a: T[], b: U[]) => [T, U][];
 /**
  * @description bindP
