@@ -9,6 +9,12 @@
  */
 
 /**
+ * @description Type T or undefined. Not naming it Option/Maybe because it would violate
+ * expecations of a Monadic type.
+ */
+export type Opt<T> = T | undefined
+
+/**
  * @description Type T or null or undefined.
  */
 export type Nullable<T> = T | null | undefined
@@ -135,6 +141,62 @@ export const zip = <T, U = T>(a: T[], b: U[]): [T, U][] => {
   }
 
   return result;
+};
+
+/**
+ * @description Checks if a value is a primitive value.
+ *
+ * @param x The value to test.
+ * @returns Whether or not the argument is a Javascript primitive.
+ */
+export const isPrimitiveValue = (x: any): boolean => {
+  const type = typeof x;
+  return type === 'number'
+    || type === 'string'
+    || type === 'undefined'
+    || type === 'symbol'
+    || type === 'boolean';
+};
+
+/**
+ * @description Type guard for PromiseLike.
+ *
+ * @param x The value to test.
+ * @returns whether or not the argument is a PromiseLike.
+ */
+export const isThenable = (x: any): boolean => x && typeof x.then === 'function';
+
+/**
+ * @description Deep clones a Javascript value.
+ * NOTE: no cycle detection! This will overflow the stack for objects
+ * with circular references or extremely deep nesting.
+ *
+ * @param obj The value to be cloned.
+ * @returns A recursively deepCloned copy of the argument.
+ */
+export const deepClone = <T>(obj: T): T => {
+  if (obj === null || isPrimitiveValue(obj)) return obj;
+  // if (Array.isArray(obj)) return obj.map(deepClone);
+  return Object.entries(obj).reduce((acc: { [k: string]: any }, [key, value]) => {
+    // For promise-like, assume immutability
+    if (isPrimitiveValue(value) || isThenable(value)) {
+      acc[key] = value;
+      // Defer to object's clone method if present.
+    } else if (typeof value.clone === 'function') {
+      acc[key] = value.clone();
+    } else if (Array.isArray(value)) {
+      acc[key] = value.map(deepClone);
+    } else if (Object.prototype.toString.call(value) === '[object Object]') {
+      acc[key] = deepClone(value);
+    } else {
+      console.warn(
+        `Cannot clone object of type ${Object.prototype.toString.call(value)}, copying reference.`,
+      );
+      acc[key] = value;
+    }
+
+    return acc;
+  }, {}) as T;
 };
 
 /**

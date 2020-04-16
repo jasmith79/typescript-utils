@@ -78,6 +78,61 @@ exports.zip = (a, b) => {
     return result;
 };
 /**
+ * @description Checks if a value is a primitive value.
+ *
+ * @param x The value to test.
+ * @returns Whether or not the argument is a Javascript primitive.
+ */
+exports.isPrimitiveValue = (x) => {
+    const type = typeof x;
+    return type === 'number'
+        || type === 'string'
+        || type === 'undefined'
+        || type === 'symbol'
+        || type === 'boolean';
+};
+/**
+ * @description Type guard for PromiseLike.
+ *
+ * @param x The value to test.
+ * @returns whether or not the argument is a PromiseLike.
+ */
+exports.isThenable = (x) => x && typeof x.then === 'function';
+/**
+ * @description Deep clones a Javascript value.
+ * NOTE: no cycle detection! This will overflow the stack for objects
+ * with circular references or extremely deep nesting.
+ *
+ * @param obj The value to be cloned.
+ * @returns A recursively deepCloned copy of the argument.
+ */
+exports.deepClone = (obj) => {
+    if (obj === null || exports.isPrimitiveValue(obj))
+        return obj;
+    // if (Array.isArray(obj)) return obj.map(deepClone);
+    return Object.entries(obj).reduce((acc, [key, value]) => {
+        // For promise-like, assume immutability
+        if (exports.isPrimitiveValue(value) || exports.isThenable(value)) {
+            acc[key] = value;
+            // Defer to object's clone method if present.
+        }
+        else if (typeof value.clone === 'function') {
+            acc[key] = value.clone();
+        }
+        else if (Array.isArray(value)) {
+            acc[key] = value.map(exports.deepClone);
+        }
+        else if (Object.prototype.toString.call(value) === '[object Object]') {
+            acc[key] = exports.deepClone(value);
+        }
+        else {
+            console.warn(`Cannot clone object of type ${Object.prototype.toString.call(value)}, copying reference.`);
+            acc[key] = value;
+        }
+        return acc;
+    }, {});
+};
+/**
  * @description bindP
  *
  * Although due to their auto-flattening Promises do not strictly speaking

@@ -8,6 +8,11 @@
  * @license MIT
  */
 /**
+ * @description Type T or undefined. Not naming it Option/Maybe because it would violate
+ * expecations of a Monadic type.
+ */
+export declare type Opt<T> = T | undefined;
+/**
  * @description Type T or null or undefined.
  */
 export declare type Nullable<T> = T | null | undefined;
@@ -86,6 +91,29 @@ export declare const debounce: (n: number, immed: boolean | ((...args: any[]) =>
  * @returns An array with the matching index pairs from the input arrrays.
  */
 export declare const zip: <T, U = T>(a: T[], b: U[]) => [T, U][];
+/**
+ * @description Checks if a value is a primitive value.
+ *
+ * @param x The value to test.
+ * @returns Whether or not the argument is a Javascript primitive.
+ */
+export declare const isPrimitiveValue: (x: any) => boolean;
+/**
+ * @description Type guard for PromiseLike.
+ *
+ * @param x The value to test.
+ * @returns whether or not the argument is a PromiseLike.
+ */
+export declare const isThenable: (x: any) => boolean;
+/**
+ * @description Deep clones a Javascript value.
+ * NOTE: no cycle detection! This will overflow the stack for objects
+ * with circular references or extremely deep nesting.
+ *
+ * @param obj The value to be cloned.
+ * @returns A recursively deepCloned copy of the argument.
+ */
+export declare const deepClone: <T>(obj: T) => T;
 /**
  * @description bindP
  *
