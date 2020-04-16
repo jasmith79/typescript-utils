@@ -9,6 +9,11 @@
  */
 
 /**
+ * @description Type T or null or undefined.
+ */
+export type Nullable<T> = T | null | undefined
+
+/**
  * @description Plain Old Javascript Object.
  */
 export interface IPojo {
