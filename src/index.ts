@@ -85,7 +85,7 @@ export const echo = (x: any) => x;
  * @param f The function to debounce.
  * @returns The debounced function.
  */
-const debounce = (
+export const debounce = (
   n: number,
   immed: boolean | ((...args: any[]) => void),
   f?: ((...args: any[]) => void),

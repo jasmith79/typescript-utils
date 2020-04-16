@@ -38,7 +38,7 @@ exports.echo = (x) => x;
  * @param f The function to debounce.
  * @returns The debounced function.
  */
-const debounce = (n, immed, f) => {
+exports.debounce = (n, immed, f) => {
     let [func, now] = (() => {
         switch (Object.prototype.toString.call(immed)) {
             case '[object Boolean]':

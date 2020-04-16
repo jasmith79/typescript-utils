@@ -65,6 +65,15 @@ export declare const identity: <T>(x: T) => T;
  */
 export declare const echo: (x: any) => any;
 /**
+ * @description Will bin up calls to the debounced function.
+ *
+ * @param n The debounce timeout.
+ * @param immed Whether to fire the debounced function on first event.
+ * @param f The function to debounce.
+ * @returns The debounced function.
+ */
+export declare const debounce: (n: number, immed: boolean | ((...args: any[]) => void), f?: ((...args: any[]) => void) | undefined) => (...args: any[]) => number;
+/**
  * @description Combines two arrays pairwise, truncating to the length of the
  * shorter.
  *
