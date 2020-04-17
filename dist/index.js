@@ -99,6 +99,23 @@ exports.isPrimitiveValue = (x) => {
  */
 exports.isThenable = (x) => x && typeof x.then === 'function';
 /**
+ * @description Extracts the value, if present, from an event on a FormControl.
+ *
+ * @param event The event to extract a value from.
+ * @returns The extracted string value.
+ */
+exports.extractEventValue = (event) => {
+    const target = event.target ? event.target : null;
+    const currentTarget = event.currentTarget ? event.currentTarget : null;
+    const targetValue = target?.value;
+    const currentTargetValue = currentTarget?.value;
+    return targetValue == null
+        ? currentTargetValue == null
+            ? ''
+            : currentTargetValue
+        : targetValue;
+};
+/**
  * @description Deep clones a Javascript value.
  * NOTE: no cycle detection! This will overflow the stack for objects
  * with circular references or extremely deep nesting.

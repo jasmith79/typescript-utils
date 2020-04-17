@@ -106,6 +106,13 @@ export declare const isPrimitiveValue: (x: any) => boolean;
  */
 export declare const isThenable: (x: any) => boolean;
 /**
+ * @description Extracts the value, if present, from an event on a FormControl.
+ *
+ * @param event The event to extract a value from.
+ * @returns The extracted string value.
+ */
+export declare const extractEventValue: (event: FormControlEvent) => string;
+/**
  * @description Deep clones a Javascript value.
  * NOTE: no cycle detection! This will overflow the stack for objects
  * with circular references or extremely deep nesting.
