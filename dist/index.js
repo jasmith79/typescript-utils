@@ -107,8 +107,8 @@ exports.isThenable = (x) => x && typeof x.then === 'function';
 exports.extractEventValue = (event) => {
     const target = event.target ? event.target : null;
     const currentTarget = event.currentTarget ? event.currentTarget : null;
-    const targetValue = target?.value;
-    const currentTargetValue = currentTarget?.value;
+    const targetValue = target === null || target === void 0 ? void 0 : target.value;
+    const currentTargetValue = currentTarget === null || currentTarget === void 0 ? void 0 : currentTarget.value;
     return targetValue == null
         ? currentTargetValue == null
             ? ''
