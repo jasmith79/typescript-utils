@@ -69,5 +69,4 @@ exports.pipe = (...fs) => {
         return rest.reduce((res, fn) => fn(res), seed);
     };
 };
-/* end */ 
 //# sourceMappingURL=index.js.map

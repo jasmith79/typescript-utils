@@ -51,6 +51,13 @@ export declare type FormControlEvent = {
  */
 export declare const emptyFn: (..._args: any[]) => void;
 /**
+ * @description Node uses an OO interface for timeouts whereas the
+ * browser uses integer handles. This is a proper cross-platform
+ * timeout type.
+ */
+export declare type TimeoutHandle = ReturnType<typeof setTimeout>;
+export declare type IntervalHandle = ReturnType<typeof setInterval>;
+/**
  * @description Identity function. Preserves type of the argument.
  *
  * @param x {T} The argument.

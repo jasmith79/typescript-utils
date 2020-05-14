@@ -62,6 +62,14 @@ export type FormControlEvent = {
 export const emptyFn = (..._args: any[]) => {};
 
 /**
+ * @description Node uses an OO interface for timeouts whereas the
+ * browser uses integer handles. This is a proper cross-platform
+ * timeout type.
+ */
+export type TimeoutHandle = ReturnType<typeof setTimeout>;
+export type IntervalHandle = ReturnType<typeof setInterval>;
+
+/**
  * @description Identity function. Preserves type of the argument.
  *
  * @param x {T} The argument.
@@ -145,5 +153,3 @@ export const pipe = <F extends [(arg: any) => any, ...Array<(arg: any) => any>]>
     return rest.reduce((res, fn) => fn(res), seed);
   };
 };
-
-/* end */
