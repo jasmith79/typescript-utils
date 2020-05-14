@@ -2,11 +2,20 @@
  * index.ts
  *
  * @description My typescript utility interfaces and functions. Stuff that I
- * need but that probably isn't worth importing e.g. Ramda for.
+ * need but that probably isn't worth importing e.g. Ramda, Lodash for.
  *
  * @author jasmith79
  * @license MIT
  */
+/**
+ * @description Type T or undefined. Not naming it Option/Maybe because it would violate
+ * expecations of a Monadic type.
+ */
+export declare type Opt<T> = T | undefined;
+/**
+ * @description Type T or null or undefined.
+ */
+export declare type Nullable<T> = T | null | undefined;
 /**
  * @description Plain Old Javascript Object.
  */
@@ -71,7 +80,54 @@ export declare const identity: <T>(x: T) => T;
  * @returns The supplied argument.
  */
 export declare const echo: (x: any) => any;
+/**
+ * @description Will bin up calls to the debounced function.
+ *
+ * @param n The debounce timeout.
+ * @param immed Whether to fire the debounced function on first event.
+ * @param f The function to debounce.
+ * @returns The debounced function.
+ */
+export declare const debounce: (n: number, immed: boolean | ((...args: any[]) => void), f?: ((...args: any[]) => void) | undefined) => (...args: any[]) => TimeoutHandle;
+/**
+ * @description Combines two arrays pairwise, truncating to the length of the
+ * shorter.
+ *
+ * @param a First array.
+ * @param b Second array.
+ * @returns An array with the matching index pairs from the input arrrays.
+ */
 export declare const zip: <T, U = T>(a: T[], b: U[]) => [T, U][];
+/**
+ * @description Checks if a value is a primitive value.
+ *
+ * @param x The value to test.
+ * @returns Whether or not the argument is a Javascript primitive.
+ */
+export declare const isPrimitiveValue: (x: any) => boolean;
+/**
+ * @description Type guard for PromiseLike.
+ *
+ * @param x The value to test.
+ * @returns whether or not the argument is a PromiseLike.
+ */
+export declare const isThenable: (x: any) => boolean;
+/**
+ * @description Extracts the value, if present, from an event on a FormControl.
+ *
+ * @param event The event to extract a value from.
+ * @returns The extracted string value.
+ */
+export declare const extractEventValue: (event: FormControlEvent) => string;
+/**
+ * @description Deep clones a Javascript value.
+ * NOTE: no cycle detection! This will overflow the stack for objects
+ * with circular references or extremely deep nesting.
+ *
+ * @param obj The value to be cloned.
+ * @returns A recursively deepCloned copy of the argument.
+ */
+export declare const deepClone: <T>(obj: T) => T;
 /**
  * @description bindP
  *

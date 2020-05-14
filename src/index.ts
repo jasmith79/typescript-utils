@@ -2,11 +2,22 @@
  * index.ts
  *
  * @description My typescript utility interfaces and functions. Stuff that I
- * need but that probably isn't worth importing e.g. Ramda for.
+ * need but that probably isn't worth importing e.g. Ramda, Lodash for.
  *
  * @author jasmith79
  * @license MIT
  */
+
+/**
+ * @description Type T or undefined. Not naming it Option/Maybe because it would violate
+ * expecations of a Monadic type.
+ */
+export type Opt<T> = T | undefined
+
+/**
+ * @description Type T or null or undefined.
+ */
+export type Nullable<T> = T | null | undefined
 
 /**
  * @description Plain Old Javascript Object.
@@ -85,6 +96,51 @@ export const identity = <T>(x: T): T => x;
  */
 export const echo = (x: any) => x;
 
+const defaultTimerHandle = setTimeout(emptyFn, 0);
+/**
+ * @description Will bin up calls to the debounced function.
+ *
+ * @param n The debounce timeout.
+ * @param immed Whether to fire the debounced function on first event.
+ * @param f The function to debounce.
+ * @returns The debounced function.
+ */
+export const debounce = (
+  n: number,
+  immed: boolean | ((...args: any[]) => void),
+  f?: ((...args: any[]) => void),
+): ((...args: any[]) => TimeoutHandle) => {
+  let [func, now] = (() => {
+    switch (Object.prototype.toString.call(immed)) {
+      case '[object Boolean]':
+        return [f as (...args: any[]) => void, immed as boolean];
+      case '[object Function]':
+        return [immed as (...args: any[]) => void, false];
+      default:
+        throw new TypeError(`Unrecognized arguments ${immed} and ${f} to function deb.`);
+    }
+  })();
+
+  let fn = (func as (...args: any[]) => void);
+  let timer = defaultTimerHandle;
+  return function (this: any, ...args: any[]) {
+    if (timer === defaultTimerHandle && now) {
+      fn.apply(this, args);
+    }
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), n);
+    return timer;
+  }
+};
+
+/**
+ * @description Combines two arrays pairwise, truncating to the length of the
+ * shorter.
+ *
+ * @param a First array.
+ * @param b Second array.
+ * @returns An array with the matching index pairs from the input arrrays.
+ */
 export const zip = <T, U = T>(a: T[], b: U[]): [T, U][] => {
   const result = [];
   const l = Math.min(a.length, b.length);
@@ -94,6 +150,80 @@ export const zip = <T, U = T>(a: T[], b: U[]): [T, U][] => {
   }
 
   return result;
+};
+
+/**
+ * @description Checks if a value is a primitive value.
+ *
+ * @param x The value to test.
+ * @returns Whether or not the argument is a Javascript primitive.
+ */
+export const isPrimitiveValue = (x: any): boolean => {
+  const type = typeof x;
+  return type === 'number'
+    || type === 'string'
+    || type === 'undefined'
+    || type === 'symbol'
+    || type === 'boolean';
+};
+
+/**
+ * @description Type guard for PromiseLike.
+ *
+ * @param x The value to test.
+ * @returns whether or not the argument is a PromiseLike.
+ */
+export const isThenable = (x: any): boolean => x && typeof x.then === 'function';
+
+/**
+ * @description Extracts the value, if present, from an event on a FormControl.
+ *
+ * @param event The event to extract a value from.
+ * @returns The extracted string value.
+ */
+export const extractEventValue = (event: FormControlEvent): string => {
+  const target = event.target ? event.target as HTMLFormControl : null;
+  const currentTarget = event.currentTarget ? event.currentTarget as HTMLFormControl : null;
+  const targetValue = target?.value;
+  const currentTargetValue = currentTarget?.value;
+  return targetValue == null
+    ? currentTargetValue == null
+      ? ''
+      : currentTargetValue
+    : targetValue;
+};
+
+/**
+ * @description Deep clones a Javascript value.
+ * NOTE: no cycle detection! This will overflow the stack for objects
+ * with circular references or extremely deep nesting.
+ *
+ * @param obj The value to be cloned.
+ * @returns A recursively deepCloned copy of the argument.
+ */
+export const deepClone = <T>(obj: T): T => {
+  if (obj === null || isPrimitiveValue(obj)) return obj;
+  // if (Array.isArray(obj)) return obj.map(deepClone);
+  return Object.entries(obj).reduce((acc: { [k: string]: any }, [key, value]) => {
+    // For promise-like, assume immutability
+    if (isPrimitiveValue(value) || isThenable(value)) {
+      acc[key] = value;
+      // Defer to object's clone method if present.
+    } else if (typeof value.clone === 'function') {
+      acc[key] = value.clone();
+    } else if (Array.isArray(value)) {
+      acc[key] = value.map(deepClone);
+    } else if (Object.prototype.toString.call(value) === '[object Object]') {
+      acc[key] = deepClone(value);
+    } else {
+      console.warn(
+        `Cannot clone object of type ${Object.prototype.toString.call(value)}, copying reference.`,
+      );
+      acc[key] = value;
+    }
+
+    return acc;
+  }, {}) as T;
 };
 
 /**
